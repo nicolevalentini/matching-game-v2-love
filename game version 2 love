@@ -97,6 +97,7 @@
       background-color: #f7d4c0;
       border-radius: 10px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 1;
     }
 
     .envelope-flap {
@@ -114,6 +115,7 @@
 
     .envelope-flap.open {
       transform: rotateX(180deg);
+      z-index: 1; /* Changes to be behind the letter when open */
     }
 
     .envelope-letter {
@@ -135,12 +137,13 @@
     }
 
     .envelope-letter.reveal {
-      transform: translateY(-60px);
+      transform: translateY(-90px);
+      z-index: 4; /* Ensure it's always on top */
     }
 
     .message-content {
       font-family: 'Pacifico', cursive;
-      font-size: 26px;
+      font-size: 24px;
       color: #5a3e36;
       text-align: center;
       padding: 20px;
@@ -150,6 +153,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      line-height: 1.3;
     }
 
     .message-content.show {
@@ -180,7 +184,7 @@
       <div class="envelope-back"></div>
       <div class="envelope-flap" id="envelopeFlap"></div>
       <div class="envelope-letter" id="envelopeLetter">
-        <div class="message-content" id="messageContent">Love you ❤</div>
+        <div class="message-content" id="messageContent">Un bacino a Kamran, Jennifer ed Ehsan</div>
       </div>
     </div>
   </div>
