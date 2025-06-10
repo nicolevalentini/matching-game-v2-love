@@ -2,46 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
   <title>Matching Reveal Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <!-- Cross-browser polyfills -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6,IntersectionObserver,ResizeObserver,NodeList.prototype.forEach,Element.prototype.classList"></script>
 </head>
 <body>
-  <div class="instructions" id="instructionsBox">
-    <h1>Welcome to the Matching Reveal Game!</h1>
-    <p>Match the tiles to reveal a secret message.</p>
-    <p>You have 2 minutes to complete the challenge.</p>
-    <button class="start-button" onclick="startGame()">Start Game</button>
+  <!-- Browser compatibility notice (hidden by default) -->
+  <div id="browserNotice" class="browser-notice">
+    <div class="notice-content">
+      <p>For the best experience, please use a modern browser like Chrome, Firefox, Safari, or Edge.</p>
+      <button onclick="dismissNotice()">Continue Anyway</button>
+    </div>
   </div>
+
+  <!-- Sound Toggle Button -->
+  <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">
+    <span id="soundIcon">🔊</span>
+  </button>
+
+  <!-- Game Header -->
+  <div class="game-header">
+    <h1 class="game-title">Memory Match</h1>
+    <div class="progress-container" id="progressContainer">
+      <span class="progress-text" id="progressText">0/12</span>
+    </div>
+  </div>
+
+  <div class="instructions" id="instructionsBox">
+    <div class="instruction-content">
+      <h2>Welcome to Memory Match!</h2>
+      <p>Match the tiles to reveal a special message.</p>
+      <p class="time-info">You have 2 minutes to complete the challenge.</p>
+      <button class="start-button" onclick="startGame()">
+        <span class="button-icon">▶</span>
+        Start Game
+      </button>
+    </div>
+  </div>
+  
   <div class="game-board" id="gameBoard"></div>
   
   <div class="timer-container" id="timerContainer">
-    <div class="timer-text" id="timerText">120</div>
+    <div class="timer-circle">
+      <div class="timer-text" id="timerText">120</div>
+    </div>
   </div>
   
   <div class="envelope-container" id="envelopeContainer">
-    <div class="envelope">
-      <div class="envelope-back"></div>
-      <div class="envelope-flap" id="envelopeFlap"></div>
-      <div class="envelope-letter" id="envelopeLetter">
-        <div class="message-content" id="messageContent">You are the best<br>Love Jane ♡</div>
+    <div class="confetti-wrapper" id="confettiWrapper"></div>
+    
+    <div class="envelope-wrapper">
+      <div class="envelope">
+        <div class="envelope-back"></div>
+        <div class="envelope-flap" id="envelopeFlap"></div>
+        <div class="envelope-letter" id="envelopeLetter">
+          <div class="message-content" id="messageContent">
+            <div class="congratulations">
+              <span class="heart">♡</span>
+              Congratulations!
+              <span class="heart">♡</span>
+            </div>
+            <div class="main-message">
+              I love you<br>
+              Yours Jane ♡<br>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+    
+    <div class="action-buttons" id="actionButtons">
+      <button class="action-button primary" onclick="startGame()">
+        <span class="button-icon">▶</span>
+        Play Again
+      </button>
+      <button class="action-button secondary" onclick="resetToMenu()">
+        Back to Menu
+      </button>
     </div>
   </div>
   
   <div class="confetti" id="confetti"></div>
   
-  <!-- Existing audio elements -->
-  <audio id="clickSound" src="./mouse-click-sound-233951.mp3" preload="auto"></audio>
-  <audio id="matchSound" src="./bubblepop-254773.mp3" preload="auto"></audio>
-  <audio id="winSound" src="./success-fanfare-trumpets-6185.mp3" preload="auto"></audio>
-  <audio id="envelopeSound" src="./envelope-open-sound.mp3" preload="auto"></audio>
-  <audio id="tickSound" src="./clock-tick.mp3" preload="auto"></audio>
-  <audio id="timeoutSound" src="./timeout-buzzer.mp3" preload="auto"></audio>
-  
-  <!-- Add the background music audio element here -->
-  <audio id="backgroundMusic" src="./backmusic.mp3" preload="auto"></audio>
+  <!-- Audio elements with multiple formats -->
+  <audio id="clickSound" preload="auto">
+    <source src="./mouse-click-sound-233951.mp3" type="audio/mpeg">
+    <source src="./mouse-click-sound-233951.ogg" type="audio/ogg">
+  </audio>
+  <audio id="matchSound" preload="auto">
+    <source src="./bubblepop-254773.mp3" type="audio/mpeg">
+    <source src="./bubblepop-254773.ogg" type="audio/ogg">
+  </audio>
+  <audio id="winSound" preload="auto">
+    <source src="./success-fanfare-trumpets-6185.mp3" type="audio/mpeg">
+    <source src="./success-fanfare-trumpets-6185.ogg" type="audio/ogg">
+  </audio>
+  <audio id="envelopeSound" preload="auto">
+    <source src="./envelope-open-sound.mp3" type="audio/mpeg">
+    <source src="./envelope-open-sound.ogg" type="audio/ogg">
+  </audio>
+  <audio id="tickSound" preload="auto">
+    <source src="./clock-tick.mp3" type="audio/mpeg">
+    <source src="./clock-tick.ogg" type="audio/ogg">
+  </audio>
+  <audio id="timeoutSound" preload="auto">
+    <source src="./timeout-buzzer.mp3" type="audio/mpeg">
+    <source src="./timeout-buzzer.ogg" type="audio/ogg">
+  </audio>
+  <audio id="backgroundMusic" preload="auto">
+    <source src="./backmusic.mp3" type="audio/mpeg">
+    <source src="./backmusic.ogg" type="audio/ogg">
+  </audio>
 
   <script src="script.js"></script>
 </body>
